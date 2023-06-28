@@ -12,8 +12,10 @@ const App = () => {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    if(contacts.length) {
+    if (contacts.length) {
       localStorage.setItem('contacts', JSON.stringify(contacts));
+    } else {
+      localStorage.removeItem('contacts');
     }
   }, [contacts]);
 
@@ -22,25 +24,22 @@ const App = () => {
     if (isExist) {
       alert(name + " is allready in contacts");
       return
-  }
+    }
 
-  let newContact = {
-    id: shortid.generate(),
-    name,
-    number
-  };
-  setContacts([...contacts, newContact]);
-}
+    let newContact = {
+      id: shortid.generate(),
+      name,
+      number
+    };
+    setContacts([...contacts, newContact]);
+  }
 
   const searchHandler = (query) => {
     setFilter(query);
   }
 
-  const deleteHandler = (e) => {
-    let name = e.target.value;
-    let contactsCopy = contacts;
-    contactsCopy = contactsCopy.filter((el) => !el.name.includes(name));
-    setContacts(contactsCopy);
+  const deleteHandler = (name) => {
+    setContacts(prevState => (prevState.filter((el) => !el.name.includes(name))));
   }
 
   return (
